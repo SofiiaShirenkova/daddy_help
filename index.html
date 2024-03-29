@@ -29,12 +29,12 @@
 
 <canvas id="packmanCanvas"></canvas>
 
-<div id="studyScreen">
+<div id="studyScreenPack">
     <img src="./imgPacman/how.svg" id="studyScreenForPacman">
-    <div id="close2"><img src="./imgPacman/close.png" id="but"></div>
+    <div id="close2"><img src="" id="but"></div>
 </div>
 
-<div id="endScreen">
+<div id="endScreenPack">
     <img src="./imgPacman/dead.svg" id="deadForPacman">
     <div id="close"><img src="./imgPacman/close.png" id="but"></div>
 </div>
@@ -68,7 +68,7 @@
     <div id="close3"><img src="./imgSpace/close3.svg" id="but"></div>
 </div>
 
-<div id="backToMenueSpace"><img src="./imgSpace/closeSpcaeB.svg" id="closeSpcaeB"></div>
+<div id="backToMenueSpace" onclick="closeBattle()"><img src="./imgSpace/closeSpcaeB.svg" id="closeSpaceB"></div>
 
 <div id="anotherDevice3"><img src="./imgSpace/anDevice3.svg" id="anDeviceB3"></div>
 </div>
@@ -81,11 +81,9 @@
 
 
 
-
-
 <!-- ЖИЗНЬ -->
 <div id="lifeDiv">
-
+<canvas id = "lifeCanvas"></canvas>
 <div id="studyLife"><img src="./imgLife/studyLifeWindow.svg" id="studyLifeId"></div>
 
 <div id="buttons">
@@ -95,7 +93,7 @@
     <div id="clearB" onclick="CB()"><img src="imgLife/restart.svg" id="clearId"></div>
 </div>
     
-<div id="backToMenuLife"><img src="imgLife/close4.svg" id="backToMenuLB"></div>
+<div id="backToMenuLife" onclick="closeLife()"><img src="imgLife/close4.svg" id="backToMenuLB"></div>
     
 <div id="anotherDevice2">
     <img src="./imgLife/anDevice2.svg" id="anDeviceB2">

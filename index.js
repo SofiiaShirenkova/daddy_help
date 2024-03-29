@@ -1,4 +1,4 @@
-let gamestate = 'hub'
+let state = 'hub'
 
 const hubcanvas = document.getElementById('hubCanvas')
 const hubc = hubcanvas.getContext('2d')
@@ -338,28 +338,42 @@ class Interaction {
     action(){
         const hc = document.getElementById('hubCanvas')
         hc.style.display = 'none'
+        clearInterval(animationHUB)
         switch (this.type){
             case 'packman':
                 console.log('packman is pressed')
                 const pd = document.getElementById('pacmanDiv')
                 pd.style.display = 'flex'
-                gamestate = 'packman'
+                const ssp = document.getElementById('studyScreenPack')
+                ssp.style.display = 'flex'
+
+                state = 'studying packman'
                 newPackmanGame()
-                /*const studyScreen = document.getElementById('studyScreen')
-                studyScreen.style.display = 'flex'*/
 
                 break
             case 'battleship':
                 console.log('battleship is pressed')
                 const sc = document.getElementById('spaceDiv')
                 sc.style.display = 'flex'
-                gamestate = 'battleships'
+                const studyScreen = document.getElementById('backToMenueSpace')
+                studyScreen.style.display = 'flex'
+                let sss = document.getElementById("studyScreenSpace");
+                sss.style.display="flex";
+
+                state = 'studying battle'
                 newBattleshipsGame()
-                /*const studyScreen = document.getElementById('studyScreen')
-                studyScreen.style.display = 'flex'*/
                 break
             case 'life':
                 console.log('life is pressed')
+                const ld = document.getElementById('lifeDiv')
+                ld.style.display = 'flex'
+                const btt = document.getElementById('buttons')
+                btt.style.display = 'flex'
+                const sl = document.getElementById('studyLife')
+                sl.style.display = 'flex'
+                const btml = document.getElementById('backToMenuLife')
+                btml.style.display = 'flex'
+                state = 'studying life'
                 break   
         }
     }
@@ -679,11 +693,18 @@ const gi2 = new Interaction(position = {x: gaem2.position.x - intwidth, z: gaem2
 const gi3 = new Interaction(position = {x: gaem3.position.x - intwidth, z: gaem3.position.z}, intwidth, intwidth, 'life')
 
 let snow = []
-
+for(let i = 0; i < 100; i++){
+    snow.push(new Snow(position = {alpha: Math.random() * 2 * Math.PI, y: Math.random() * 120 - 10, r: 35}, [
+        {x: 1, y: 0, z: 0},
+        {x: 0, y: 1, z: 0},
+        {x: 0, y: 0, z: 1}
+    ], [[0, 1, 2]], 'maxpoint', velocity = {alpha: (Math.random() - 0.5) * 0.01, y: -0.07, r: (Math.random() - 0.5) * 0}, angles = {alpha: 0, beta: 0}, angleVelocity = {alpha: 0.01, beta: 0.01}))
+}
 
 function animateHub() {
+    console.log(state)
     start = Date.now()
-    requestAnimationFrame(animateHub)
+    //requestAnimationFrame(animateHub)
     hubc.clearRect(0, 0, hubcanvas.width, hubcanvas.height)
     snow.forEach(pr => {
         pr.update()
@@ -704,23 +725,9 @@ function animateHub() {
     })
     spectator.update()
 }
-animateHub()
+animationHUB = setInterval(animateHub, 10)
 
 
-
-function createSnow() {
-    let newSnow = new Snow(position = {alpha: Math.random() * 2 * Math.PI, y: 50, r: 35}, [
-        {x: 1, y: 0, z: 0},
-        {x: 0, y: 1, z: 0},
-        {x: 0, y: 0, z: 1}
-    ], [[0, 1, 2]], 'maxpoint', velocity = {alpha: (Math.random() - 0.5) * 0.01, y: -0.07, r: (Math.random() - 0.5) * 0}, angles = {alpha: 0, beta: 0}, angleVelocity = {alpha: 0.01, beta: 0.01})
-    snow.push(newSnow)
-    if(snow.length == 100){
-        clearInterval(timerID)
-    }
-}
-
-let timerID = setInterval(createSnow, 100)
 /*
 addEventListener('keydown', ({key}) => {
     switch (key){
@@ -793,8 +800,8 @@ addEventListener('keyup', ({key}) => {
 */
 
 addEventListener('keydown', ({key}) => {
-    if(gamestate == 'hub') {
-
+    if(state == 'hub') {
+        console.log(123123123)
     switch (key){
         case 'w':
             spectator.velocity.x = 0.2
@@ -844,7 +851,7 @@ addEventListener('keydown', ({key}) => {
 }})
 
 addEventListener('keyup', ({key}) => {
-    if(gamestate == 'hub') {
+    if(state == 'hub') {
 
     switch (key){
         case 'w': case 's':
@@ -917,7 +924,7 @@ function isOnQuad(pointX, pointY, px1, py1, px2, py2, px3, py3, px4, py4){
 }
 
 addEventListener('click', mouse =>{
-    if(gamestate == 'hub'){
+    if(state == 'hub'){
     let htpw = document.getElementById('howToPlayWindow')
     htpw.style.display = 'none'
     if(isOnQuad(mouse.clientX, mouse.clientY, screen1.points[0].image.x, screen1.points[0].image.y, screen1.points[1].image.x, screen1.points[1].image.y, screen1.points[2].image.x, screen1.points[2].image.y, screen1.points[3].image.x, screen1.points[3].image.y)){
@@ -986,8 +993,6 @@ const scoreElpm = document.querySelector('#scoreEl') //счётчик балло
 
 
 
-let state = 'study'
-
 let canvasHTML = document.getElementById("packmanCanvas");
 
 
@@ -1014,11 +1019,7 @@ packmancanvas.height = innerHeight * 0.93*/
 // function clearpackmancanvas(packmancanvas) {
 // 	packmancanvas.width = packmancanvas.width;
 // }
-/*
-const marleft = (innerWidth - packmancanvas.width) / 2;
-console.log(marleft)
-canvasHTML.style.marginLeft = marleft;
-*/
+
 
 let minedge = Math.min(packmancanvas.height, packmancanvas.width)
 
@@ -1245,7 +1246,6 @@ const map = [
 ]
     //генерация каждого нового квадрата + мы перенесли карту для облегчения кода
 
-console.log(map.length, map[0].length)
 //создаём картинку к границам не вызывая её каждый раз, а с помощью ретёрна
 // function creatImage(src) {
 //     const image = new Image () //вставили картинку !!source = src!!
@@ -1281,7 +1281,7 @@ function newPackmanGame(){
     ghosts[3].velocity.y = 0
 
 
-    state = 'ingame'
+    state = 'packman'
     lastKey = "" //установили последнюю нажатую кнопку, чтобы ничего не паехалоо, как моя крыша
     scorePM = 0
     scoreElpm.innerHTML = scorePM
@@ -1556,7 +1556,6 @@ function animatePackman() {
             // <= 
             // boundary.position.x + boundary.width
         ) {
-            //console.log('we are colliding')
             playerPM.velocity.x = 0
             playerPM.velocity.y = 0
         }
@@ -1695,7 +1694,7 @@ function animatePackman() {
 //позже установим скорость в цикле анимации (?)
 //убрали скорость тк теперь оно само определяем правда ли, что кнопка нажата или нет
 addEventListener('keydown', ({key}) => {
-    if(gamestate == 'packman'){
+    if(state == 'packman'){
 
     if(key == 'w' || key == 'a' || key == 'd' || key == 's'){ closeStudyscreen() }
     switch (key) {
@@ -1723,7 +1722,7 @@ addEventListener('keydown', ({key}) => {
 //keyup -- чтобы  он не двигался бесконечно по диагонали прописываем скорость на нулях
 //убрали скорость как и в кейдаун тк если кнопка не нажата - не проигрываем
 addEventListener('keyup', ({key}) => {
-    if(gamestate == 'packman'){
+    if(state == 'packman'){
     switch (key) {
         case 'w':
             keysPM.w.pressed = false
@@ -1747,27 +1746,27 @@ addEventListener('keyup', ({key}) => {
 }})
 
 addEventListener('click', mouse => {
-    console.log(gamestate, state)
-    if(gamestate == 'packman'){
-    let es = document.getElementById("endScreen");
+    console.log(state)
+    if(state == 'packman' || state == 'studying packman' || state == 'died in packman'){
+    let es = document.getElementById("endScreenPack");
     es.style.display="none";
     let cl = document.getElementById("close");
     cl.style.display="none";
-    if(state == 'deathscreen'){
-        console.log(126487)
-        closeDeathscreen()
+    if(state == 'died in packman'){
+        console.log(12312312312421412)
+        closePackmanDeathscreen()
     }
     else{
-        closeStudyscreen()
+        //closeStudyscreen()
     }
 }})
 
 //экран при состоянии проигрышка
 function endScreen() {
-    state = 'deathscreen'
+    state = 'died in packman'
     /*let packmanCanvas = document.getElementById("packmanCanvas");
     packmanCanvas.style.display="none";*/
-    let es = document.getElementById("endScreen");
+    let es = document.getElementById("endScreenPack");
     es.style.display="flex"; 
     let cl = document.getElementById("close");
     cl.style.display="flex";
@@ -1775,26 +1774,21 @@ function endScreen() {
     // p1.style.color="black";
 }
 
-function closeDeathscreen(){
+function closePackmanDeathscreen(){
     let packmanCanvas = document.getElementById("packmanCanvas");
     packmanCanvas.style.display="block";
-    let es = document.getElementById("endScreen");
-    es.style.display="none";
+    let esp = document.getElementById("endScreenPack");
+    esp.style.display="none";
     let cl = document.getElementById("close");
     cl.style.display="none";
-    /*let ss = document.getElementById("studyScreen");
-    ss.style.display="none";
-    let cl2 = document.getElementById("close2");
-    cl2.style.display="none";*/
-
     p1.style.color="white";
     newPackmanGame()
 }
 
 //экран обучения
 function closeStudyscreen(){
-    let ss = document.getElementById("studyScreen");
-    ss.style.display="none";
+    let ssp = document.getElementById("studyScreenPack");
+    ssp.style.display="none";
     let cl2 = document.getElementById("close2");
     cl2.style.display="none";
 }
@@ -1825,7 +1819,8 @@ function closePackman(){
     pd.style.display = 'none'
     const hc = document.getElementById('hubCanvas')
     hc.style.display = 'flex'
-    gamestate = 'hub'
+    state = 'hub'
+    animateHub = setInterval(animateHub, 10)
     clearTimeout(animationId)
 }
 
@@ -1984,16 +1979,15 @@ function closePackman(){
 
 
 //КОРАБЛЬ
-const canvas = document.getElementById('spaceCanvas')
-const c = canvas.getContext('2d')
-const scoreElbs = document.querySelector('#scoreEl')
+const battleshipcanvas = document.getElementById('spaceCanvas')
+const battleshipc = battleshipcanvas.getContext('2d')
+const scoreElbs = document.querySelector('#scoreElSpace')
 
-canvas.width = innerWidth 
-canvas.height = innerHeight 
+battleshipcanvas.width = innerWidth 
+battleshipcanvas.height = innerHeight 
 
-state = 'study'
 
-animationId
+//animationId
 
 //создаём игрока 
 class PlayerBS {
@@ -2013,18 +2007,18 @@ class PlayerBS {
             this.width = image.width * scale
             this.height = image.height * scale
             this.position = {
-                x: canvas.width / 2 - this.width / 2,
-                y: canvas.height - this.height - 20
+                x: battleshipcanvas.width / 2 - this.width / 2,
+                y: battleshipcanvas.height - this.height - 20
             }
     
         }
     }
 
     draw() {
-        c.save()
-        c.globalAlpha = this.opacity
-        c.drawImage(this.image, this.position.x, this.position.y, this.width, this.height)
-        c.restore()
+        battleshipc.save()
+        battleshipc.globalAlpha = this.opacity
+        battleshipc.drawImage(this.image, this.position.x, this.position.y, this.width, this.height)
+        battleshipc.restore()
     }
 
     update() {
@@ -2058,7 +2052,7 @@ class Invader {
     }
        
     draw() {
-        c.drawImage(this.image, this.position.x, this.position.y, this.width, this.height)
+        battleshipc.drawImage(this.image, this.position.x, this.position.y, this.width, this.height)
     }
 
     update({velocity}) {
@@ -2120,7 +2114,7 @@ class Grid {
 
         this.velocity.y = 0
 
-        if (this.position.x + this.width >= canvas.width || this.position.x <= 0) {
+        if (this.position.x + this.width >= battleshipcanvas.width || this.position.x <= 0) {
             this.velocity.x = -this.velocity.x
             this.velocity.y = 30
         }
@@ -2138,11 +2132,11 @@ class Projectile {
 
     //РИСУЕМ КРУГЛУЮ ПУЛЬКУ
     draw() {
-        c.beginPath() //НАЧАЛИ ДУГУ
-        c.arc(this.position.x, this.position.y, this.radius, 0, Math.PI * 2)  //обвели точку дугой -- создание круга
-        c.fillStyle = 'red'
-        c.fill()
-        c.closePath() //ЗАКОНЧИЛИ ДУГУ 
+        battleshipc.beginPath() //НАЧАЛИ ДУГУ
+        battleshipc.arc(this.position.x, this.position.y, this.radius, 0, Math.PI * 2)  //обвели точку дугой -- создание круга
+        battleshipc.fillStyle = 'red'
+        battleshipc.fill()
+        battleshipc.closePath() //ЗАКОНЧИЛИ ДУГУ 
     }
 
     update() {
@@ -2165,14 +2159,14 @@ class Particle {
     }
 
     draw() {
-        c.save()
-        c.globalAlpha = this.opacity //исчезновение частиц
-        c.beginPath() 
-        c.arc(this.position.x, this.position.y, this.radius, 0, Math.PI * 2)  
-        c.fillStyle = this.color
-        c.fill()
-        c.closePath() 
-        c.restore()
+        battleshipc.save()
+        battleshipc.globalAlpha = this.opacity //исчезновение частиц
+        battleshipc.beginPath() 
+        battleshipc.arc(this.position.x, this.position.y, this.radius, 0, Math.PI * 2)  
+        battleshipc.fillStyle = this.color
+        battleshipc.fill()
+        battleshipc.closePath() 
+        battleshipc.restore()
     }
 
     update() {
@@ -2195,8 +2189,8 @@ class InvaderProjectile {
     }
 
     draw() {
-        c.fillStyle = 'white'
-        c.fillRect(this.position.x, this.position.y, this.width, this.height)
+        battleshipc.fillStyle = 'white'
+        battleshipc.fillRect(this.position.x, this.position.y, this.width, this.height)
     }
 
     update() {
@@ -2226,10 +2220,13 @@ const keysBS = { //отследивание клавиш -- нажата? про
 
 let frames
 let randomInterval //создание второго грида с захватчиками
-let game
+let game = {over: false, active: true}
 let scoreBS
 
 function newBattleshipsGame(){
+    keysBS.a.pressed = false
+    keysBS.d.pressed = false
+
     playerBS = new PlayerBS()
     projectiles = []
     grids = []
@@ -2242,13 +2239,12 @@ function newBattleshipsGame(){
         active: true
     }
     scoreBS = 0
-    console.log(game.active)
     //звёзды на бэкграунде
     for(let i = 0; i < 100; i++) {
         particles.push(new Particle({
             position:{ //рандомное расположение звёзд на фоне по оси х и y
-                x: Math.random() * canvas.width,
-                y: Math.random() * canvas.height
+                x: Math.random() * battleshipcanvas.width,
+                y: Math.random() * battleshipcanvas.height
             }, 
             velocity: {
                 x: 0,
@@ -2280,17 +2276,16 @@ function createParticles({object, color, fades})  {
 }
 
 function animateBattleships () {
-    console.log(123123)
 
     //if (!game.active) return //если игра не активна -- весь последующий код не активируется
-    c.fillStyle = 'black' 
-    c.fillRect(0, 0, canvas.width, canvas.height)
+    battleshipc.fillStyle = 'black' 
+    battleshipc.fillRect(0, 0, battleshipcanvas.width, battleshipcanvas.height)
     playerBS.update()
     particles.forEach((particle, i) => {
 
             //зациклили появление звёзд на бэке -- появление на осях
-            if (particle.y - particle.radius >= canvas.height) {
-                particle.position.x = Math.random() * canvas.width
+            if (particle.y - particle.radius >= battleshipcanvas.height) {
+                particle.position.x = Math.random() * battleshipcanvas.width
                 particle.position.y = -particle.radius
             }
 
@@ -2304,7 +2299,7 @@ function animateBattleships () {
     })
 
     invaderProjectiles.forEach((invaderProjectile, index) => {
-        if(invaderProjectile.position.y + invaderProjectile.height >= canvas.height) {
+        if(invaderProjectile.position.y + invaderProjectile.height >= battleshipcanvas.height) {
             setTimeout(() => {
                 invaderProjectiles.splice(index, 1)    
             }, 0)
@@ -2421,7 +2416,7 @@ function animateBattleships () {
 
     if (keysBS.a.pressed && playerBS.position.x >= 0) { //нажимая клавишу а двиг влево, а перемещ лев сторону игрока если она > или = нулю -- создали границу слева 
         playerBS.velocity.x = -vel //перемещение влево
-    } else if (keysBS.d.pressed && playerBS.position.x + playerBS.width <= canvas.width) { //тут не if else, а else if (что странно, надо разобраться почему!!!) + && далее установка границ справа 
+    } else if (keysBS.d.pressed && playerBS.position.x + playerBS.width <= battleshipcanvas.width) { //тут не if else, а else if (что странно, надо разобраться почему!!!) + && далее установка границ справа 
         playerBS.velocity.x = vel
     } else {
         playerBS.velocity.x = 0
@@ -2441,19 +2436,17 @@ function animateBattleships () {
 //({}) -- деструктурирование объекта
 addEventListener('keydown', ({ key }) => {
     // if(key == 'a' || key == 'd' || key == ' '){ closeStudyscreen() }
-    if (game.over) return //при проигрыше -- кораблик больше не стреляет
-
+    //if (game.over) return //при проигрыше -- кораблик больше не стреляет
+    if(state == 'battle' || state == 'studying battle'){
+    closeStudyScreenSpace()
     switch (key) {
         case 'a':
-            //console.log('left')
             keysBS.a.pressed = true //кнопка нажата? - да! -- проигрываем! нет? -- стопаемся!
         break
         case 'd':
-            //console.log('right')
             keysBS.d.pressed = true
         break
         case ' ': //при нажатии пробела пулька летит вверх
-            //console.log('space')
             projectiles.push(new Projectile({ //ПУЛЬКИ ПОЗИШН + СКОРОСТЬ
         position: {
             x: playerBS.position.x + playerBS.width / 2, //пульки летят левее тк оттуда начинается пллоскость координат
@@ -2466,53 +2459,52 @@ addEventListener('keydown', ({ key }) => {
         }))
         break
     }
-})
+}})
 
 //остановка при достижении нужной скорости
 addEventListener('keyup', ({ key }) => {
+    if(state == 'battle' || state == 'studying battle'){
     switch (key) {
         case 'a':
-           // console.log('left')
             keysBS.a.pressed = false
         break
         case 'd':
-            //console.log('right')
             keysBS.d.pressed = false
         break
         case ' ':
-            //console.log('space')
         break
     }
-})
+}})
 
 addEventListener('click', mouse => {
-    if(state == 'deathscreen'){
-        closeDeathscreen()
+    if(state == 'battle' || state == 'studying battle' || state == 'died in battle')
+    if(state == 'died in battle'){
+        closeBattleDeathscreen()
     }
     else{
-        console.log("kjfwijefiwoe")
-        closeStudyScreenSpace()
+        //closeStudyScreenSpace()
     }
 })
 
 //экран при состоянии проигрышка
 function endScreenSpace() {
-    state = 'deathscreen'
+    state = 'died in battle'
     let ess = document.getElementById("endScreenSpace");
-    ess.style.display="flex"; 
+    ess.style.display="flex";
+    console.log(ess.style.display)
     let cl = document.getElementById("close3");
     cl.style.display="flex";
 }
 
 
-function closeDeathscreen(){
+function closeBattleDeathscreen(){
     let spaceCanvas = document.getElementById("spaceCanvas");
     spaceCanvas.style.display="block";
     let ess = document.getElementById("endScreenSpace");
     ess.style.display="none";
     let cl = document.getElementById("close3");
     cl.style.display="none";
-    
+    state = 'battle'
     p2.style.color="white";
     newBattleshipsGame()
 }
@@ -2533,7 +2525,7 @@ if (screen.width <= 600) {
     spaceCanvas.style.display="none";
     let p22 = document.getElementById("p2")
     p22.style.color="black";
-    let sEl = document.getElementById("scoreEl")
+    let sEl = document.getElementById("scoreElSpace")
     sEl.style.color="black";
 } else {
     let ad3 = document.getElementById("anotherDevice3");
@@ -2542,10 +2534,24 @@ if (screen.width <= 600) {
     spaceCanvas.style.display="flex";
     let p22 = document.getElementById("p2")
     p22.style.color="white";
-    let sEl = document.getElementById("scoreEl")
+    let sEl = document.getElementById("scoreElSpace")
     sEl.style.color="white";
 }
 
+
+function closeBattle(){
+    const sd = document.getElementById('spaceDiv')
+    sd.style.display = 'none'
+    const hc = document.getElementById('hubCanvas')
+    hc.style.display = 'flex'
+    let ess = document.getElementById("endScreenSpace");
+    ess.style.display="none";
+
+    animateHub = setInterval(animateHub, 10)
+    state = 'hub'
+    console.log('works&')
+    clearTimeout(animationId)
+}
 
 
 
@@ -2700,12 +2706,12 @@ if (screen.width <= 600) {
 
 
 // ЖИЗНЬ
-const lifecanvas = document.querySelector('canvas')
-const lifec = canvas.getContext('2d')
+const lifecanvas = document.getElementById('lifeCanvas')
+const lifec = lifecanvas.getContext('2d')
 
 
-canvas.height = innerHeight
-canvas.width = innerHeight * 100 / 71 + 7
+lifecanvas.height = innerHeight
+lifecanvas.width = innerHeight * 100 / 71 + 7
 
 const deadColor = 'black'
 const aliveColor = '#00FF00'
@@ -2722,29 +2728,29 @@ class Cell {
         this.nextcolor = deadColor
     }
     draw(){
-        c.fillStyle = this.color
-        c.fillRect(this.position.x - delta, this.position.y - delta, cellsize - delta, cellsize - delta)
-        c.fill()
-        c.closePath()
+        lifec.fillStyle = this.color
+        lifec.fillRect(this.position.x - delta, this.position.y - delta, cellsize - delta, cellsize - delta)
+        lifec.fill()
+        lifec.closePath()
     }
 } 
 
 //создание сетки
 const gridwidth = 100
 const gridheight = 71
-let grid = []
+let lifegrid = []
 for (let i = 0; i < gridheight; i++) { //проходимся по каждой строке 
     let array = []
     for (let j = 0; j < gridwidth; j++) { //проходится по каждому элементу в строке
         let cell = new Cell({x: j * cellsize, y: i * cellsize})
         array.push(cell)
     }
-    grid.push(array)
+    lifegrid.push(array)
 }
 
 for (let i = 0; i < gridheight; i++) { //проходимся по каждой строке 
     for (let j = 0; j < gridwidth; j++) { //проходится по каждому элементу в строке
-        grid[i][j].draw()
+        lifegrid[i][j].draw()
     } //рисуем сеточку :3
 }
 
@@ -2754,29 +2760,29 @@ function animate(){
     for (let i = 0; i < gridheight; i++) { //проходимся по каждой строке 
         for (let j = 0; j < gridwidth; j++) { //проходится по каждому элементу в строке
             let cnt = 0
-            if(grid[(i + 1) % gridheight][(j + 1) % gridwidth].color == aliveColor){ cnt++ }
-            if(grid[(i + 1) % gridheight][j].color == aliveColor){ cnt++ }
-            if(grid[i][(j + 1) % gridwidth].color == aliveColor){ cnt++ }
-            if(grid[(i - 1 + gridheight) % gridheight][(j - 1 + gridwidth) % gridwidth].color == aliveColor){ cnt++ }
-            if(grid[i][(j - 1 + gridwidth) % gridwidth].color == aliveColor){ cnt++ }
-            if(grid[(i - 1 + gridheight) % gridheight][j].color == aliveColor){ cnt++ }
-            if(grid[(i + 1) % gridheight][(j - 1 + gridwidth) % gridwidth].color == aliveColor){ cnt++ }
-            if(grid[(i - 1 + gridheight) % gridheight][(j + 1) % gridwidth].color == aliveColor){ cnt++ }
+            if(lifegrid[(i + 1) % gridheight][(j + 1) % gridwidth].color == aliveColor){ cnt++ }
+            if(lifegrid[(i + 1) % gridheight][j].color == aliveColor){ cnt++ }
+            if(lifegrid[i][(j + 1) % gridwidth].color == aliveColor){ cnt++ }
+            if(lifegrid[(i - 1 + gridheight) % gridheight][(j - 1 + gridwidth) % gridwidth].color == aliveColor){ cnt++ }
+            if(lifegrid[i][(j - 1 + gridwidth) % gridwidth].color == aliveColor){ cnt++ }
+            if(lifegrid[(i - 1 + gridheight) % gridheight][j].color == aliveColor){ cnt++ }
+            if(lifegrid[(i + 1) % gridheight][(j - 1 + gridwidth) % gridwidth].color == aliveColor){ cnt++ }
+            if(lifegrid[(i - 1 + gridheight) % gridheight][(j + 1) % gridwidth].color == aliveColor){ cnt++ }
     
-            if(grid[i][j].color == deadColor){
+            if(lifegrid[i][j].color == deadColor){
                 if(cnt == 3){
-                    grid[i][j].nextcolor = aliveColor
+                    lifegrid[i][j].nextcolor = aliveColor
                 }
                 else{
-                    grid[i][j].nextcolor = deadColor
+                    lifegrid[i][j].nextcolor = deadColor
                 }
             }
-            if(grid[i][j].color == aliveColor){
+            if(lifegrid[i][j].color == aliveColor){
                 if(cnt < 2 || cnt > 3){
-                    grid[i][j].nextcolor = deadColor
+                    lifegrid[i][j].nextcolor = deadColor
                 }
                 else{
-                    grid[i][j].nextcolor = aliveColor
+                    lifegrid[i][j].nextcolor = aliveColor
                 }
             }
         }
@@ -2785,8 +2791,8 @@ function animate(){
     
     for (let i = 0; i < gridheight; i++) { //проходимся по каждой строке 
         for (let j = 0; j < gridwidth; j++) { //проходится по каждому элементу в строке
-            grid[i][j].draw()
-            grid[i][j].color = grid[i][j].nextcolor
+            lifegrid[i][j].draw()
+            lifegrid[i][j].color = lifegrid[i][j].nextcolor
         }
     }
 }
@@ -2798,6 +2804,8 @@ let isPlaying //булевая переменная
 //кнопочки
 //кнопка начать
 function PB() {
+    const st = document.getElementById('studyLife')
+    console.log(st.style.display)
             if(!isPlaying){ //если оно уже проигрывается, то не проигрываем второй раз
                 an = setInterval(animate, 100) //выполнять функцию анимэйт -- запустили анимацию
             }
@@ -2817,14 +2825,14 @@ function RB() {
             for (let i = 0; i < gridheight; i++) { //проходимся по каждой строке 
                 for (let j = 0; j < gridwidth; j++) { //проходится по каждому элементу в строке
                     if(Math.random() > 0.4){
-                        grid[i][j].color = deadColor
-                        grid[i][j].nextcolor = deadColor
+                        lifegrid[i][j].color = deadColor
+                        lifegrid[i][j].nextcolor = deadColor
                     }
                     else{
-                        grid[i][j].color = aliveColor
-                        grid[i][j].nextcolor = deadColor
+                        lifegrid[i][j].color = aliveColor
+                        lifegrid[i][j].nextcolor = deadColor
                     }
-                    grid[i][j].draw()
+                    lifegrid[i][j].draw()
                 }
             }
 } 
@@ -2835,33 +2843,33 @@ function CB() {
             clearInterval(an)
             for (let i = 0; i < gridheight; i++) { //проходимся по каждой строке 
                 for (let j = 0; j < gridwidth; j++) { //проходится по каждому элементу в строке
-                    grid[i][j].color = deadColor //каждую клеточку делаем белой, а потом зарисовываем
-                    grid[i][j].nextcolor = deadColor
-                    grid[i][j].draw()
+                    lifegrid[i][j].color = deadColor //каждую клеточку делаем белой, а потом зарисовываем
+                    lifegrid[i][j].nextcolor = deadColor
+                    lifegrid[i][j].draw()
                 }
             }
 }
 
 addEventListener('click', mouse => {
+    if(state == 'life' || state == 'studying life'){
     let inew = Math.floor(mouse.clientY / cellsize), 
     jnew = Math.floor(mouse.clientX / cellsize)
-    grid[inew][jnew].color = aliveColor
-    grid[inew][jnew].draw()
-    console.log(mouse.clientX, mouse.clientY)
-})
+    lifegrid[inew][jnew].color = aliveColor
+    lifegrid[inew][jnew].draw()
+
+
+    setTimeout(closeStudyScreenLife, 1000)
+}})
 
 
 
-addEventListener('click', mouse => {
-        closeStudyscreenLife()
-})
 
 //экран обучения
-function closeStudyscreenLife(){
+function closeStudyScreenLife(){
     let sl = document.getElementById("studyLife");
     sl.style.display="none";
 }
-
+/*
 if (screen.width <= 600) {
     let ad2 = document.getElementById("anotherDevice2");
     ad2.style.display="flex";
@@ -2876,4 +2884,17 @@ if (screen.width <= 600) {
     canvasLifeL.style.display="flex";
     let btnLife = document.getElementById("buttons");
     btnLife.style.display="flex";
+}*/
+
+
+function closeLife(){
+    const ld = document.getElementById('lifeDiv')
+    ld.style.display = 'none'
+    const hc = document.getElementById('hubCanvas')
+    hc.style.display = 'flex'
+
+    animateHub = setInterval(animateHub, 10)
+    state = 'hub'
+    console.log('works&')
+    clearTimeout(animationId)
 }
